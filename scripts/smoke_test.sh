@@ -13,13 +13,14 @@
 #   - All architecture, feature, loss, and cost ablations
 #
 # Smoke overrides vs production:
-#   - 5 HP trials (instead of 50–100)
-#   - 5 seeds (instead of 10/25)
+#   - 1 HP trial (instead of 50–100)
+#   - 1 retained seed (instead of 10/25)
+#   - 2 training epochs on the built-in 5-asset test subset
 #   - 1 test window: [2020] (instead of 3)
 #
 # Prerequisites:
 #   1. pip install -e .  (or uv sync)
-#   2. Place raw price data at data/data_dec25.parquet
+#   2. Place raw price data at data/data_20260625.parquet
 #   3. Set WANDB_ENTITY and WANDB_API_KEY (or WANDB_MODE=offline)
 #
 # Usage:
@@ -63,7 +64,7 @@ run_step 1 "Generate adjacency matrix" \
 # Step 2: Prepare features (skip if already exists)
 # ──────────────────────────────────────────────
 step2() {
-    FEATS_FILE="data/feats-data_dec25.parquet"
+    FEATS_FILE="data/feats-data_20260625.parquet"
     if [ -f "$FEATS_FILE" ]; then
         echo "  Features file already exists: $FEATS_FILE — skipping."
     else
@@ -213,6 +214,7 @@ step6() {
     echo ""
     python scripts/aggregate_metrics.py \
         --title "Table 1: Main Results (Smoke)" \
+        --csv backtest_results/smoke_current_20260625_metrics.csv \
         "${BASELINE_CONFIGS[@]}" \
         bt-smoke-temporal-baseline-zero-cost \
         bt-smoke-temporal-baseline \

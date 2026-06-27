@@ -3,6 +3,8 @@ import gc
 import json
 import os
 import pickle
+from collections import defaultdict
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -10,7 +12,7 @@ import torch
 
 import wandb
 
-from deepm.training.train import TrainDeepMomentumNetwork
+from deepm.training.train import TrainDeepMomentumNetwork, empty_device_cache
 from deepm.utils.logging_utils import get_logger
 from deepm.configs.settings import WANDB_ENTITY
 
@@ -111,20 +113,38 @@ class Tuner:
     def hyperparameter_optimisation(self):
         self.iteration = 0
         self._ensure_wandb_login()
-
-        sweep_id, num_completed = self._resume_or_create_sweep()
-        remaining = self.settings["random_search_max_iterations"] - num_completed
-        if remaining <= 0:
-            return self._save_sweep_results(sweep_id)
-
         self._fixed_config = self._build_fixed_config()
 
-        wandb.agent(
-            f"{WANDB_ENTITY}/{self.settings['project']}/{sweep_id}",
-            function=self._run_single_trial,
-            count=remaining,
-        )
-        return self._save_sweep_results(sweep_id)
+        stalled_batches = 0
+        while True:
+            sweep_id, num_completed = self._resume_or_create_sweep()
+            remaining = self.settings["random_search_max_iterations"] - num_completed
+            if remaining <= 0:
+                return self._save_sweep_results(sweep_id)
+
+            self.logger.info(
+                "Resuming sweep %s: %d usable completed runs, %d remaining",
+                sweep_id,
+                num_completed,
+                remaining,
+            )
+            before = num_completed
+            wandb.agent(
+                f"{WANDB_ENTITY}/{self.settings['project']}/{sweep_id}",
+                function=self._run_single_trial,
+                count=remaining,
+            )
+
+            _, after = self._resume_or_create_sweep()
+            if after <= before:
+                stalled_batches += 1
+                if stalled_batches >= 2:
+                    raise RuntimeError(
+                        "W&B sweep made no usable progress in two consecutive "
+                        "agent batches. Check failed runs before retrying."
+                    )
+            else:
+                stalled_batches = 0
 
     @staticmethod
     def _ensure_wandb_login():
@@ -138,25 +158,109 @@ class Tuner:
         wandb.login(**key_kwargs)
 
     def _resume_or_create_sweep(self):
-        """Find an existing sweep or create a new one. Returns (sweep_id, num_completed)."""
+        """Find an existing sweep or create a new one.
+
+        Returns (sweep_id, num_usable_completed), where "usable" means the W&B
+        run has all summary metrics and the corresponding local model/settings
+        artifacts exist. This keeps resume behavior aligned with what backtests
+        can actually consume.
+        """
+        runs = self._group_runs()
+        num_runs = len(runs)
+
+        if num_runs == 0:
+            sweep_id = self._create_sweep()
+            return sweep_id, 0
+
+        num_completed = sum(1 for r in runs if self._is_usable_completed_run(r))
+        sweep_id = self._select_available_sweep(runs)
+        if sweep_id is None:
+            sweep_id = self._create_sweep()
+        return sweep_id, num_completed
+
+    def _group_runs(self) -> list[Any]:
         api = wandb.Api()
         runs = api.runs(
             f"{WANDB_ENTITY}/{self.settings['project']}",
             filters={"group": self.sweep_settings["name"]},
             per_page=10000,
         )
-        if len(runs) == 0:
-            sweep_id = wandb.sweep(
-                sweep=self.sweep_settings,
-                project=self.settings["project"],
-                entity=WANDB_ENTITY,
-            )
-            return sweep_id, 0
+        try:
+            return list(runs)
+        except ValueError as exc:
+            if "Could not find project" not in str(exc):
+                raise
+            return []
 
-        sweep_id = runs[0].sweep.id
-        assert all(r.sweep.id == sweep_id for r in runs)
-        num_completed = sum(1 for r in runs if r.state == "finished")
-        return sweep_id, num_completed
+    def _create_sweep(self) -> str:
+        self.logger.info(
+            "Creating continuation sweep for group %s",
+            self.sweep_settings["name"],
+        )
+        return wandb.sweep(
+            sweep=self.sweep_settings,
+            project=self.settings["project"],
+            entity=WANDB_ENTITY,
+        )
+
+    def _search_space_size(self) -> int | None:
+        size = 1
+        for spec in self.sweep_settings.get("parameters", {}).values():
+            values = spec.get("values")
+            if values is None:
+                return None
+            size *= len(values)
+        return size
+
+    def _select_available_sweep(self, runs: list[Any]) -> str | None:
+        """Return a sweep id that can still issue jobs, or None if a new one is needed."""
+        search_space_size = self._search_space_size()
+        sweep_runs: dict[str, list[Any]] = defaultdict(list)
+        for run in runs:
+            if run.sweep is not None:
+                sweep_runs[run.sweep.id].append(run)
+        if not sweep_runs:
+            return None
+
+        def latest_created_at(items: list[Any]) -> str:
+            return max(str(getattr(run, "created_at", "")) for run in items)
+
+        for sweep_id, items in sorted(
+            sweep_runs.items(),
+            key=lambda pair: latest_created_at(pair[1]),
+            reverse=True,
+        ):
+            if search_space_size is None or len(items) < search_space_size:
+                return sweep_id
+
+        self.logger.info(
+            "All existing sweeps for group %s are exhausted (%d jobs each); "
+            "creating a continuation sweep.",
+            self.sweep_settings["name"],
+            search_space_size,
+        )
+        return None
+
+    def _run_has_complete_summary(self, run: Any) -> bool:
+        summary = run.summary._json_dict
+        return all(k in summary for k in SUMMARY_KEYS)
+
+    def _run_has_local_artifacts(self, run_name: str) -> bool:
+        return all(
+            os.path.exists(path)
+            for path in (
+                self.model_training.model_save_path(run_name),
+                self.model_training.settings_path(run_name),
+                self.model_training.data_params_path(run_name),
+            )
+        )
+
+    def _is_usable_completed_run(self, run: Any) -> bool:
+        return (
+            run.state == "finished"
+            and self._run_has_complete_summary(run)
+            and self._run_has_local_artifacts(run.name)
+        )
 
     def _build_fixed_config(self):
         return {
@@ -189,16 +293,26 @@ class Tuner:
                 self.logger.info("----Random grid search iteration %s----", self.iteration)
                 self.logger.info("----%s----", self.settings["description"])
 
-                (
-                    test_sharpe, valid_sharpe, test_sharpe_net,
-                    test_calmar, test_calmar_net,
-                ) = self.model_training.run(
-                    architecture=self.architecture,
-                    log_wandb=True,
-                    wandb_run_name=name,
-                    **self.settings,
-                    **hp,
-                )
+                try:
+                    (
+                        test_sharpe, valid_sharpe, test_sharpe_net,
+                        test_calmar, test_calmar_net,
+                    ) = self.model_training.run(
+                        architecture=self.architecture,
+                        log_wandb=True,
+                        wandb_run_name=name,
+                        **self.settings,
+                        **hp,
+                    )
+                except FloatingPointError as exc:
+                    self.logger.warning(
+                        "Skipping unstable hyperparameter trial %s: %s",
+                        name,
+                        exc,
+                    )
+                    wandb.log({"training_failed": 1})
+                    wandb.summary["failure_reason"] = str(exc)[:500]
+                    return
 
                 self._save_trial_artifacts(name, hp, test_sharpe, test_sharpe_net, valid_sharpe)
 
@@ -211,7 +325,7 @@ class Tuner:
                 }, step=None)
         finally:
             gc.collect()
-            torch.cuda.empty_cache()
+            empty_device_cache()
 
     def _save_trial_artifacts(self, name, hp, test_sharpe, test_sharpe_net, valid_sharpe):
         """Save settings JSON and data params pickle for a completed trial."""
@@ -235,21 +349,26 @@ class Tuner:
 
     # ── Results aggregation ───────────────────────────────────────
 
-    def _save_sweep_results(self, sweep_id):
-        """Aggregate finished runs from a wandb sweep, save CSVs, and return best metrics."""
-        sweep = wandb.Api().sweep(
-            f"{WANDB_ENTITY}/{self.settings['project']}/{sweep_id}"
-        )
-        runs = [r for r in sweep.runs if r.state == "finished"]
+    def _save_sweep_results(self, sweep_id=None):
+        """Aggregate usable finished runs from all sweeps in this W&B group."""
+        runs = [r for r in self._group_runs() if r.state == "finished"]
+        run_summaries = [
+            pd.Series(r.summary._json_dict, name=r.name).loc[SUMMARY_KEYS]
+            for r in runs
+            if self._run_has_complete_summary(r) and self._run_has_local_artifacts(r.name)
+        ]
 
-        all_runs = pd.concat(
-            [
-                pd.Series(r.summary._json_dict, name=r.name).loc[SUMMARY_KEYS]
-                for r in runs
-                if all(k in r.summary._json_dict for k in SUMMARY_KEYS)
-            ],
-            axis=1,
-        ).T.sort_values("valid_loss_best", ascending=False)
+        if not run_summaries:
+            self.logger.warning(
+                "No finished wandb runs with complete summaries found for sweep %s",
+                sweep_id,
+            )
+            wandb.finish()
+            return (np.nan, np.nan, np.nan, np.nan, np.nan)
+
+        all_runs = pd.concat(run_summaries, axis=1).T.sort_values(
+            "valid_loss_best", ascending=False
+        )
 
         best_runs = all_runs.head(self.settings["top_n_seeds"])
 

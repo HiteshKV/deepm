@@ -1,6 +1,6 @@
 sweep_yaml: sweep-deepm
 save_directory: models_torch
-project: dmn
+project: DMN
 
 use_lagged_cross_section: true
 use_xatt: false
@@ -31,7 +31,7 @@ softmin_sharpe_center: false
 
 ticker_reference_file: futs_and_fx
 
-data_parquet: "data_dec25.parquet"
+data_parquet: "data_20260625.parquet"
 use_correlation_features: false
 
 test_run: false
@@ -65,7 +65,7 @@ features:
   - z_price_252d
 
 first_train_year: 1990
-final_test_year: 2025
+final_test_year: 2026
 first_test_year: 2010
 test_start_years:
   - 2010

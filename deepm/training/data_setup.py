@@ -57,7 +57,7 @@ def load_and_filter_data(
 
     Args:
         settings: Training config dict.
-        data_parquet: Filename of the raw parquet (e.g. ``data_dec25.parquet``).
+        data_parquet: Filename of the raw parquet (e.g. ``data_20260625.parquet``).
             The loader prepends ``feats-`` and looks inside ``DATA_DIR``.
         end_date: Optional upper bound on the date index.
 

@@ -96,7 +96,7 @@ Training uses [wandb](https://wandb.ai) for experiment tracking and hyperparamet
 **First-time setup:**
 
 1. Create a free account at [wandb.ai](https://wandb.ai).
-2. Create a project called **`dmn`** in your wandb workspace (this is the project name referenced by all training configs).
+2. Create a project called **`DMN`** in your wandb workspace (this is the project name referenced by all training configs).
 3. Set your credentials:
 
 ```bash
@@ -110,9 +110,110 @@ To run training without a wandb account, use offline mode:
 export WANDB_MODE=offline
 ```
 
+## Daily Paper Trading And Live Management
+
+The live add-on is designed to run after daily closes, append fresh EOD prices to
+a separate live snapshot, build live features, load the validation-ranked DeePM
+seed ensemble, size target futures contracts, write an immutable audit package,
+and email the daily account impact report.
+
+Default mode is safe paper rehearsal:
+
+- `sim` uses a local fake-money ledger.
+- `ibkr-paper` defaults to an IBKR-style local paper simulator using the same
+  order, sizing, report, and ledger path, without sending orders to IBKR.
+- `ibkr-live` is disabled unless `live_enabled: true`, a same-day confirmation
+  file exists, and the IBKR order environment gates are set.
+
+Fresh daily data is written under `live_state/snapshots/`; training data in
+`data/data_20260625.parquet` is not mutated.
+
+Run once immediately:
+
+```bash
+.venv/bin/python -m deepm.live.daemon \
+  --mode ibkr-paper \
+  --config configs/live/deepm_gat_ibkr.yaml \
+  --run-now \
+  --once \
+  --send-email
+```
+
+Run continuously:
+
+```bash
+DEEPM_LIVE_SEND_EMAIL=1 bash scripts/run_live_daemon.sh ibkr-paper
+```
+
+Email uses SMTP environment variables only:
+
+```bash
+export DEEPM_SMTP_HOST="smtp.gmail.com"
+export DEEPM_SMTP_PORT="587"
+export DEEPM_SMTP_USER="your-email@gmail.com"
+export DEEPM_SMTP_PASSWORD="your-app-password"
+export DEEPM_EMAIL_FROM="your-email@gmail.com"
+```
+
+If Gmail SMTP rejects the password, use a temporary API sender such as Resend:
+
+```bash
+cp .env.live.example .env.live
+# edit .env.live and set DEEPM_RESEND_API_KEY to your Resend key
+
+bash scripts/test_live_email.sh ibkr-paper 2026-06-25
+```
+
+For Resend test mode, sign up with the destination mailbox and send to that
+verified address first; use a verified domain later for production sending.
+
+Daily outputs:
+
+```text
+live_runs/YYYY-MM-DD/input_snapshot.json
+live_runs/YYYY-MM-DD/signals.csv
+live_runs/YYYY-MM-DD/targets.csv
+live_runs/YYYY-MM-DD/orders.csv
+live_runs/YYYY-MM-DD/fills.csv
+live_runs/YYYY-MM-DD/positions.csv
+live_runs/YYYY-MM-DD/risk_checks.json
+live_runs/YYYY-MM-DD/summary.json
+live_runs/YYYY-MM-DD/report.html
+live_runs/YYYY-MM-DD/status.json
+live_state/trading_ledger_ibkr_paper.sqlite
+```
+
+`signals.csv` contains the model's daily 50-market output. `targets.csv`
+contains the integer futures contract targets after sizing and risk caps.
+`orders.csv`, `fills.csv`, and `positions.csv` describe the executable
+paper-account simulation.
+
+Replay a historical paper period:
+
+```bash
+.venv/bin/python -m deepm.live.backfill \
+  --mode ibkr-paper \
+  --config configs/live/deepm_gat_ibkr.yaml \
+  --start-date 2026-05-26 \
+  --end-date 2026-06-25 \
+  --reset-ledger
+```
+
+Check whether the active model should be refreshed:
+
+```bash
+.venv/bin/python -m deepm.live.maintenance \
+  --config configs/live/deepm_gat_ibkr.yaml
+```
+
+Operational policy: use daily inference with the current selected ensemble;
+train a challenger only after enough new out-of-sample data accrues, paper trade
+the challenger before promotion, and do not auto-promote a retrained model based
+on live/paper outcomes.
+
 ## Data
 
-### Raw data (`data/data_dec25.parquet`)
+### Raw data (`data/data_20260625.parquet`)
 
 The raw data is not included in this repository due to data provider licensing
 restrictions. You will need to source equivalent daily closing prices yourself
@@ -120,7 +221,7 @@ restrictions. You will need to source equivalent daily closing prices yourself
 
 The pipeline expects a **wide-format price panel** saved as a Parquet file:
 
-- **Index:** `DatetimeIndex` of trading dates (business days, 1990-01-02 to 2025-12-31)
+- **Index:** `DatetimeIndex` of trading dates (business days, 1990-01-02 to 2026-06-25)
 - **Columns:** 50 short ticker codes (see table below)
 - **Values:** Daily closing (settlement) prices for continuous front-month futures contracts
 
@@ -284,14 +385,18 @@ loader looks in `configs/tcost/`).
 bash scripts/reproduce.sh                # run full pipeline (train + backtest + tables)
 bash scripts/reproduce.sh --step 2       # run a single step (see below)
 bash scripts/reproduce.sh --baselines    # traditional baselines only (no GPU / no training)
-bash scripts/smoke_test.sh               # fast end-to-end check (5 HP trials, 5 seeds, 1 window)
+bash scripts/smoke_test.sh               # fast end-to-end check (1 HP trial, 1 seed, 1 window)
 bash scripts/smoke_test.sh --baselines   # smoke baselines only
 ```
 
-> **Note:** The smoke test uses drastically reduced settings (5 HP trials, 5 seeds,
-> single 2020–2025 test window) and exists **only to verify the pipeline runs
+> **Note:** The smoke test uses drastically reduced settings (1 HP trial, 1 retained
+> seed, 2 training epochs on the built-in 5-asset test subset, and a single
+> 2020–2026 test window) and exists **only to verify the pipeline runs
 > end-to-end without errors**.  Smoke metrics are not meaningful and should not be
-> compared to the paper results.  Use `scripts/reproduce.sh` for publishable numbers.
+> compared to the paper results.  Smoke Table 1 metrics are written to
+> `backtest_results/smoke_current_20260625_metrics.csv`; do not use
+> `backtest_results/current_20260625_metrics.csv` as a production result.  Use
+> `scripts/reproduce.sh` or the production commands below for real model numbers.
 
 The pipeline steps are:
 
@@ -334,7 +439,7 @@ between assets. The matrix is indexed by Bloomberg-style tickers (e.g.
 **2. Prepare features**
 
 ```bash
-python scripts/prepare_features.py --input data/data_dec25.parquet
+python scripts/prepare_features.py --input data/data_20260625.parquet
 ```
 
 **3. Train models**
@@ -388,6 +493,79 @@ backtest_diagnostics/
     group_gross_pnl.png           #   Per-group cumulative gross PnL
     group_net_pnl.png             #   Per-group cumulative net PnL
 ```
+
+## Daily Simulator, IBKR Paper, And Live Trading
+
+The live add-on is isolated from training and backtesting. It reads completed
+model artifacts, writes immutable daily audit files under `live_runs/`, and keeps
+the simulator ledger under `live_state/trading_ledger.sqlite`. It does not write
+to `models_torch/`, `wandb/`, or training configs.
+
+Default broker target: **Interactive Brokers**. The simulator is the default
+mode. IBKR paper/live modes fail closed until a TWS/Gateway integration, account
+permissions, market data subscriptions, contract mapping review, and order gates
+are deliberately enabled. Live trading additionally requires
+`live_enabled: true` in `configs/live/deepm_gat_ibkr.yaml` and a same-day
+confirmation file at `live_confirmations/YYYY-MM-DD.confirm`.
+
+```bash
+# Fake-money daily run, using the trained top validation-ranked ensemble.
+python -m deepm.live.daily \
+  --mode sim \
+  --config configs/live/deepm_gat_ibkr.yaml \
+  --date 2026-06-25
+
+# Generate/read an existing report.
+python -m deepm.live.report --date 2026-06-25
+
+# Reconcile simulator cash/ledger state.
+python -m deepm.live.reconcile --mode sim
+```
+
+Email reports are sent only when `--send-email` is provided and these environment
+variables are present:
+
+```bash
+export DEEPM_SMTP_HOST="smtp.example.com"
+export DEEPM_SMTP_PORT="587"
+export DEEPM_SMTP_USER="..."
+export DEEPM_SMTP_PASSWORD="..."
+export DEEPM_EMAIL_FROM="deepm@example.com"
+
+python -m deepm.live.daily --mode sim --date 2026-06-25 --send-email
+```
+
+Paper/live commands use the same CLI shape, but the IBKR adapter is intentionally
+gated:
+
+```bash
+# Paper mode: requires reviewed contract mappings, passing risk checks, and IBKR setup.
+python -m deepm.live.daily --mode ibkr-paper --config configs/live/deepm_gat_ibkr.yaml
+
+# Live mode: additionally requires live_enabled and a same-day confirmation file.
+python -m deepm.live.daily --mode ibkr-live --config configs/live/deepm_gat_ibkr.yaml
+```
+
+Daily audit output:
+
+```
+live_runs/YYYY-MM-DD/
+  input_snapshot.json
+  signals.csv
+  targets.csv
+  orders.csv
+  fills.csv
+  positions.csv
+  risk_checks.json
+  status.json
+  report.html
+```
+
+Before live trading, run the simulator for at least five business days, then run
+IBKR paper mode for at least 30 trading days with clean reconciliation. This is
+an execution/reporting system, not financial advice; futures and FX trading
+requires broker permissions, market data subscriptions, margin suitability, and
+your own regulatory/tax review.
 
 ## Training Configuration Reference
 
@@ -644,7 +822,7 @@ retained for backtesting.
 
 ### Backtest Configs (`configs/backtest_settings/`)
 
-Each training config has a corresponding backtest config prefixed with `bt-` (full-period 2010–2025) and `bt-post2020-` (recent period 2020–2025).
+Each training config has a corresponding backtest config prefixed with `bt-` (full-period 2010–2026) and `bt-post2020-` (recent period 2020–2026).
 
 | Config Pattern | Model | Paper Reference |
 |--------|-------|-----------------|
@@ -795,7 +973,7 @@ HP grid; you can reuse an existing sweep or create a new one in
 ```yaml
 save_path: backtest_results
 ticker_reference_file: futs_and_fx
-data_parquet: "data_dec25.parquet"
+data_parquet: "data_20260625.parquet"
 
 model:
   module: "deepm.backtest.models.deep_momentum"

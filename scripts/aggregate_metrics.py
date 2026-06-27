@@ -27,6 +27,7 @@ RESULTS_DIR_DEFAULT = "backtest_diagnostics"
 DISPLAY_NAMES = {
     # Main model
     "bt-deepm-gat": "DeePM-GAT (K=25)",
+    "bt-deepm-gat-k10-current": "DeePM-GAT (K=10 Yahoo Proxy)",
     "bt-smoke-deepm-gat": "DeePM-GAT",
     # Architecture ablations
     "bt-deepm-gcn": "GCN (Isotropic)",

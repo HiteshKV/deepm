@@ -1,0 +1,51 @@
+ticker,asset,yahoo_symbol,source_kind,first_date,last_date,rows,coverage_pct,note
+EN,Nasdaq 100,NQ=F,futures,2000-09-18,2025-12-31,6386,67.99,
+ER,Russell 2000,^RUT,index,1990-01-02,2025-12-31,9067,96.54,Proxy for RTY futures; longer public history.
+ES,S&P 500,ES=F,futures,2000-09-18,2025-12-31,6386,67.99,
+YM,Dow Jones,YM=F,futures,2002-04-05,2025-12-31,5977,63.64,
+LX,FTSE 100,^FTSE,index,1990-01-02,2025-12-31,9093,96.82,Proxy for FTSE futures.
+CA,CAC 40,^FCHI,index,1990-03-01,2025-12-31,9101,96.9,Proxy for CAC futures.
+XU,EuroStoxx 50,^STOXX50E,index,2007-03-30,2025-12-30,4701,50.05,Proxy for EuroStoxx futures.
+NK,Nikkei 225,^N225,index,1990-01-04,2025-12-30,8835,94.07,Proxy for Nikkei futures.
+HS,Hang Seng,^HSI,index,1990-01-02,2025-12-31,8885,94.6,Proxy for Hang Seng futures.
+FB,US 5-Year Note,ZF=F,futures,2000-09-21,2025-12-31,6360,67.72,
+TU,US 2-Year Note,ZT=F,futures,2000-06-02,2025-12-31,6414,68.29,
+TY,US 10-Year Note,ZN=F,futures,2000-09-21,2025-12-31,6348,67.59,
+US,US 30-Year Bond,ZB=F,futures,2000-09-21,2025-12-31,6354,67.65,
+DT,German Bund 10yr,EXHD.DE,etf,2008-01-02,2025-12-30,4569,48.65,German government 5.5-10.5y ETF proxy.
+UB,German Bobl 5yr,EXHC.DE,etf,2008-01-02,2025-12-30,4569,48.65,German government 2.5-5.5y ETF proxy.
+UZ,German Schatz 2yr,EXHB.DE,etf,2008-01-02,2025-12-30,4569,48.65,German government 1.5-2.5y ETF proxy.
+GS,UK Gilt,IGLT.L,etf,2008-01-02,2025-12-31,4547,48.41,UK gilt ETF proxy.
+CB,Canada 10-Year,XGB.TO,etf,2006-11-10,2025-12-31,4803,51.14,Canadian government bond ETF proxy.
+BC,Brent Crude,BZ=F,futures,2007-07-30,2025-12-31,4585,48.82,
+BG,Gasoil,HO=F,futures,2000-09-01,2025-12-31,6361,67.73,NY Harbor ULSD/heating oil proxy for gasoil.
+ZB,RBOB Gasoline,RB=F,futures,2000-11-01,2025-12-31,6322,67.31,
+ZN,Natural Gas,NG=F,futures,2000-08-30,2025-12-31,6364,67.76,
+ZU,WTI Crude,CL=F,futures,2000-08-23,2025-12-31,6366,67.78,
+ZA,Palladium,PA=F,futures,1998-09-28,2025-12-31,6397,68.11,
+ZG,Gold,GC=F,futures,2000-08-30,2025-12-31,6358,67.7,
+ZI,Silver,SI=F,futures,2000-08-30,2025-12-31,6360,67.72,
+ZP,Platinum,PL=F,futures,1997-10-29,2025-12-31,6386,67.99,
+ZK,Copper,HG=F,futures,2000-08-30,2025-12-31,6363,67.75,
+KW,KC Wheat,KE=F,futures,2000-09-21,2025-12-31,6359,67.71,
+ZC,Corn,ZC=F,futures,2000-07-17,2025-12-31,6370,67.82,
+ZL,Soybean Oil,ZL=F,futures,2000-03-15,2025-12-31,6411,68.26,
+ZM,Soybean Meal,ZM=F,futures,2000-05-15,2025-12-31,6373,67.86,
+ZS,Soybeans,ZS=F,futures,2000-09-15,2025-12-31,6362,67.74,
+ZW,Chicago Wheat,ZW=F,futures,2000-07-17,2025-12-31,6382,67.95,
+CC,Cocoa,CC=F,futures,2000-01-03,2025-12-31,6520,69.42,
+CT,Cotton,CT=F,futures,2000-01-03,2025-12-31,6520,69.42,
+JO,Orange Juice,OJ=F,futures,2001-09-17,2025-12-31,6096,64.91,
+KC,Coffee,KC=F,futures,2000-01-03,2025-12-31,6518,69.4,
+SB,Sugar,SB=F,futures,2000-03-01,2025-12-31,6481,69.01,
+ZF,Feeder Cattle,GF=F,futures,2001-04-03,2025-12-31,6195,65.96,
+ZT,Live Cattle,LE=F,futures,2001-03-01,2025-12-31,6225,66.28,
+ZZ,Lean Hogs,HE=F,futures,2000-12-15,2025-12-31,6293,67.0,
+AN,AUD/USD,6A=F,futures,2000-11-08,2025-12-31,6291,66.98,
+BN,GBP/USD,6B=F,futures,2000-10-05,2025-12-31,6302,67.1,
+CN,CAD/USD,6C=F,futures,2000-05-23,2025-12-31,6408,68.23,
+FN,EUR/USD,6E=F,futures,2000-09-12,2025-12-31,6388,68.02,
+JN,JPY/USD,6J=F,futures,2000-09-13,2025-12-31,6311,67.2,
+SN,CHF/USD,6S=F,futures,2000-11-10,2025-12-31,6296,67.04,
+MP,MXN/USD,6M=F,futures,2001-06-18,2025-12-31,6148,65.46,
+DX,US Dollar Index,DX-Y.NYB,index,1990-01-02,2025-12-31,9175,97.69,

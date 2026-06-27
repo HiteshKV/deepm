@@ -21,13 +21,17 @@ TRAIN_DIR = os.path.join(CONFIGS_DIR, "train_settings")
 BACKTEST_DIR = os.path.join(CONFIGS_DIR, "backtest_settings")
 
 SMOKE_TRAIN_OVERRIDES = {
-    "random_search_max_iterations": 5,
-    "top_n_seeds": 5,
+    "test_run": True,
+    "iterations": 2,
+    "random_search_max_iterations": 1,
+    "top_n_seeds": 1,
+    "early_stopping": 1,
+    "val_burnin_steps": 0,
     "first_test_year": 2020,
     "test_start_years": [2020],
 }
 
-SMOKE_BACKTEST_TOP_N = 5
+SMOKE_BACKTEST_TOP_N = 1
 
 DL_BACKTEST_MODULE = "deepm.backtest.models.deep_momentum"
 

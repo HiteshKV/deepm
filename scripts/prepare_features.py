@@ -2,7 +2,7 @@
 """Prepare model-ready features from raw price data.
 
 Usage:
-    python scripts/prepare_features.py --input data/data_dec25.parquet
+    python scripts/prepare_features.py --input data/data_20260625.parquet
 """
 
 import argparse
@@ -20,7 +20,7 @@ def main():
     parser.add_argument(
         "--input",
         type=str,
-        default=str(DATA_DIR / "data_dec25.parquet"),
+        default=str(DATA_DIR / "data_20260625.parquet"),
         help="Path to raw price parquet file",
     )
     parser.add_argument(

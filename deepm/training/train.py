@@ -18,7 +18,25 @@ from deepm.training.grad_accum import train_step_exact_chunked
 from deepm.utils.logging_utils import get_logger
 from deepm.utils.metrics import calmar_ratio, sharpe_ratio
 
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+def get_training_device() -> torch.device:
+    """Return the best available local training device."""
+    if torch.cuda.is_available():
+        return torch.device("cuda:0")
+    if torch.backends.mps.is_available():
+        return torch.device("mps")
+    return torch.device("cpu")
+
+
+def empty_device_cache() -> None:
+    """Clear accelerator caches when the active backend supports it."""
+    if device.type == "cuda":
+        torch.cuda.empty_cache()
+    elif device.type == "mps":
+        torch.mps.empty_cache()
+
+
+device = get_training_device()
 
 
 class TrainDeepMomentumNetwork:
@@ -34,6 +52,7 @@ class TrainDeepMomentumNetwork:
     """
 
     logger = get_logger(__name__)
+    _device_logged = False
 
     def __init__(
         self,
@@ -47,6 +66,9 @@ class TrainDeepMomentumNetwork:
         **kwargs,
     ):
         """Initialize training harness with train/valid/test datasets."""
+        if not TrainDeepMomentumNetwork._device_logged:
+            self.logger.info("Training device selected: %s", device)
+            TrainDeepMomentumNetwork._device_logged = True
 
         self.train_data = train_data
         self.valid_data = valid_data
@@ -169,7 +191,7 @@ class TrainDeepMomentumNetwork:
             )
         finally:
             del model
-            torch.cuda.empty_cache()
+            empty_device_cache()
 
     @staticmethod
     def get_q(
@@ -322,11 +344,20 @@ class TrainDeepMomentumNetwork:
             train_sharpe = self._train_epoch(
                 model, optimizer, batch_size, max_gradient_norm, q, **kwargs
             )
+            if not np.isfinite(train_sharpe):
+                raise FloatingPointError(
+                    f"Non-finite train Sharpe at iteration {iteration + 1}: {train_sharpe}"
+                )
             self.logger.info("Train %s: %.3f", train_loss_metric, train_sharpe)
 
             iteration_valid_sharpe = self._run_validation(
                 model, batch_size, valid_force_sharpe_loss, q
             )
+            if not np.isfinite(iteration_valid_sharpe):
+                raise FloatingPointError(
+                    "Non-finite validation Sharpe at iteration "
+                    f"{iteration + 1}: {iteration_valid_sharpe}"
+                )
 
             # EMA smoothing of validation metric
             if use_ema:
@@ -597,4 +628,3 @@ class TrainDeepMomentumNetwork:
             calmar_ratio(gross_series / np.sqrt(252)),
             calmar_ratio(net_series / np.sqrt(252)),
         )
-

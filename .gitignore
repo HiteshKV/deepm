@@ -137,6 +137,8 @@ celerybeat.pid
 
 # Environments
 .env
+.env.*
+!.env.live.example
 .envrc
 .venv
 env/
@@ -185,6 +187,8 @@ macro_adjacency_*.csv
 models_torch/*
 backtest_results/*
 backtest_diagnostics/*
+live_runs/*
+live_state/*
 uv.lock
 # Abstra
 # Abstra is an AI-powered process automation framework.

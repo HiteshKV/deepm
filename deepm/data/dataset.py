@@ -539,7 +539,11 @@ class CrossSectionDataset(torch.utils.data.Dataset):
         date_mapping = pd.Series(range(len(data_filled)), index=data_filled.index)
 
         self.seq_indexes = self._build_sliding_windows(
-            dates_index, date_mapping, keep_first_perc, drop_first_perc
+            dates_index,
+            date_mapping,
+            keep_first_perc,
+            drop_first_perc,
+            align_end=test_set,
         )
 
         self._build_correlation_features(
@@ -656,10 +660,23 @@ class CrossSectionDataset(torch.utils.data.Dataset):
 
         return ticker_ref, canonical_tickers, data
 
-    def _build_sliding_windows(self, dates_index, date_mapping, keep_first_perc, drop_first_perc):
+    def _build_sliding_windows(
+        self,
+        dates_index,
+        date_mapping,
+        keep_first_perc,
+        drop_first_perc,
+        align_end=False,
+    ):
         """Generate sliding-window sequence indices over the date grid."""
         total_dates = len(dates_index)
-        valid_start_indices = list(range(0, total_dates - self.seq_len + 1, self.step_size))
+        last_start = total_dates - self.seq_len
+        if last_start < 0:
+            valid_start_indices = []
+        elif align_end:
+            valid_start_indices = list(range(last_start, -1, -self.step_size))[::-1]
+        else:
+            valid_start_indices = list(range(0, last_start + 1, self.step_size))
         num_seqs = len(valid_start_indices)
 
         if keep_first_perc:

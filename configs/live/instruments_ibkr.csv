@@ -1,0 +1,51 @@
+ticker,bloomberg_ticker,yahoo_symbol,description,ibkr_symbol,sec_type,exchange,currency,point_value,tick_size,contract_type,max_contracts,reviewed
+EN,NQ1 Index,NQ=F,Nasdaq 100 E-mini,NQ,FUT,CME,USD,20,0.25,FUT,2,true
+ER,RTY1 Index,^RUT,Russell 2000 E-mini,RTY,FUT,CME,USD,50,0.1,FUT,2,true
+ES,ES1 Index,ES=F,S&P 500 E-mini,ES,FUT,CME,USD,50,0.25,FUT,2,true
+YM,DM1 Index,YM=F,Dow Jones E-mini,YM,FUT,CBOT,USD,5,1.0,FUT,3,true
+LX,Z 1 Index,^FTSE,FTSE 100 Future,Z,FUT,ICEEU,GBP,10,0.5,FUT,2,false
+CA,CF1 Index,^FCHI,CAC 40 Future,FCE,FUT,MONEP,EUR,10,0.5,FUT,2,false
+XU,VG1 Index,^STOXX50E,EuroStoxx 50 Future,FESX,FUT,EUREX,EUR,10,1.0,FUT,3,false
+NK,NK1 Index,^N225,Nikkei 225 Future,NK,FUT,OSE.JPN,JPY,1000,10.0,FUT,1,false
+HS,HI1 Index,^HSI,Hang Seng Future,HSI,FUT,HKFE,HKD,50,1.0,FUT,1,false
+FB,FV1 Comdty,ZF=F,US 5-Year Note,ZF,FUT,CBOT,USD,1000,0.0078125,FUT,2,true
+TU,TU1 Comdty,ZT=F,US 2-Year Note,ZT,FUT,CBOT,USD,2000,0.00390625,FUT,2,true
+TY,TY1 Comdty,ZN=F,US 10-Year Note,ZN,FUT,CBOT,USD,1000,0.015625,FUT,2,true
+US,US1 Comdty,ZB=F,US 30-Year Bond,ZB,FUT,CBOT,USD,1000,0.03125,FUT,2,true
+DT,RX1 Comdty,EXHD.DE,German Bund Future,GBL,FUT,EUREX,EUR,1000,0.01,FUT,2,false
+UB,OE1 Comdty,EXHC.DE,German Bobl Future,GBM,FUT,EUREX,EUR,1000,0.01,FUT,2,false
+UZ,DU1 Comdty,EXHB.DE,German Schatz Future,GBS,FUT,EUREX,EUR,1000,0.005,FUT,2,false
+GS,G 1 Comdty,IGLT.L,UK Gilt Future,R,FUT,ICEEU,GBP,1000,0.01,FUT,2,false
+CB,CN1 Comdty,XGB.TO,Canada 10-Year Bond,CGB,FUT,CDE,CAD,1000,0.01,FUT,2,false
+BC,CO1 Comdty,BZ=F,Brent Crude,BZ,FUT,NYMEX,USD,1000,0.01,FUT,2,true
+BG,QS1 Comdty,HO=F,NY Harbor ULSD proxy,HO,FUT,NYMEX,USD,42000,0.0001,FUT,2,true
+ZB,XB1 Comdty,RB=F,RBOB Gasoline,RB,FUT,NYMEX,USD,42000,0.0001,FUT,2,true
+ZN,NG1 Comdty,NG=F,Natural Gas,NG,FUT,NYMEX,USD,10000,0.001,FUT,2,true
+ZU,CL1 Comdty,CL=F,WTI Crude,CL,FUT,NYMEX,USD,1000,0.01,FUT,2,true
+ZA,PA1 Comdty,PA=F,Palladium,PA,FUT,NYMEX,USD,100,0.5,FUT,1,true
+ZG,GC1 Comdty,GC=F,Gold,GC,FUT,COMEX,USD,100,0.1,FUT,2,true
+ZI,SI1 Comdty,SI=F,Silver,SI,FUT,COMEX,USD,5000,0.005,FUT,1,true
+ZP,PL1 Comdty,PL=F,Platinum,PL,FUT,NYMEX,USD,50,0.1,FUT,1,true
+ZK,HG1 Comdty,HG=F,Copper,HG,FUT,COMEX,USD,25000,0.0005,FUT,2,true
+KW,KW1 Comdty,KE=F,KC Wheat,KE,FUT,KCBT,USD,5000,0.25,FUT,2,true
+ZC,C 1 Comdty,ZC=F,Corn,ZC,FUT,CBOT,USD,5000,0.25,FUT,2,true
+ZL,BO1 Comdty,ZL=F,Soybean Oil,ZL,FUT,CBOT,USD,60000,0.01,FUT,2,true
+ZM,SM1 Comdty,ZM=F,Soybean Meal,ZM,FUT,CBOT,USD,100,0.1,FUT,2,true
+ZS,S 1 Comdty,ZS=F,Soybeans,ZS,FUT,CBOT,USD,5000,0.25,FUT,2,true
+ZW,W 1 Comdty,ZW=F,Chicago Wheat,ZW,FUT,CBOT,USD,5000,0.25,FUT,2,true
+CC,CC1 Comdty,CC=F,Cocoa,CC,FUT,NYBOT,USD,10,1.0,FUT,1,true
+CT,CT1 Comdty,CT=F,Cotton,CT,FUT,NYBOT,USD,50000,0.01,FUT,1,true
+JO,OJ1 Comdty,OJ=F,Orange Juice,OJ,FUT,NYBOT,USD,15000,0.05,FUT,1,true
+KC,KC1 Comdty,KC=F,Coffee,KC,FUT,NYBOT,USD,37500,0.05,FUT,1,true
+SB,SB1 Comdty,SB=F,Sugar,SB,FUT,NYBOT,USD,112000,0.01,FUT,1,true
+ZF,FC1 Comdty,GF=F,Feeder Cattle,GF,FUT,CME,USD,500,0.025,FUT,1,true
+ZT,LC1 Comdty,LE=F,Live Cattle,LE,FUT,CME,USD,400,0.025,FUT,1,true
+ZZ,LH1 Comdty,HE=F,Lean Hogs,HE,FUT,CME,USD,400,0.025,FUT,1,true
+AN,AD1 Curncy,6A=F,Australian Dollar,6A,FUT,CME,USD,100000,0.00005,FUT,2,true
+BN,BP1 Curncy,6B=F,British Pound,6B,FUT,CME,USD,62500,0.0001,FUT,2,true
+CN,CD1 Curncy,6C=F,Canadian Dollar,6C,FUT,CME,USD,100000,0.00005,FUT,2,true
+FN,EC1 Curncy,6E=F,Euro FX,6E,FUT,CME,USD,125000,0.00005,FUT,2,true
+JN,JY1 Curncy,6J=F,Japanese Yen,6J,FUT,CME,USD,12500000,0.0000005,FUT,2,true
+SN,SF1 Curncy,6S=F,Swiss Franc,6S,FUT,CME,USD,125000,0.0001,FUT,2,true
+MP,PE1 Curncy,6M=F,Mexican Peso,6M,FUT,CME,USD,500000,0.00001,FUT,2,true
+DX,DX1 Curncy,DX-Y.NYB,US Dollar Index,DX,FUT,NYBOT,USD,1000,0.005,FUT,2,true

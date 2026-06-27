@@ -3,7 +3,7 @@
 #
 # Prerequisites:
 #   1. pip install -e .
-#   2. Place raw price data at data/data_dec25.parquet
+#   2. Place raw price data at data/data_20260625.parquet
 #   3. Set WANDB_ENTITY and WANDB_API_KEY environment variables
 #      (or use WANDB_MODE=offline to skip wandb entirely)
 #
@@ -13,6 +13,15 @@
 #   bash scripts/reproduce.sh --baselines    # traditional baselines only (no training)
 
 set -euo pipefail
+
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$REPO_ROOT"
+export PYTHONPATH="$REPO_ROOT${PYTHONPATH:+:$PYTHONPATH}"
+
+PYTHON_BIN="${PYTHON_BIN:-$REPO_ROOT/.venv/bin/python}"
+if [ ! -x "$PYTHON_BIN" ]; then
+    PYTHON_BIN="python"
+fi
 
 BASELINES_ONLY=false
 STEP=0
@@ -57,13 +66,13 @@ BASELINE_CONFIGS=(
 # Step 1: Generate graph adjacency matrix
 # ──────────────────────────────────────────────
 run_step 1 "Generate adjacency matrix" \
-    python scripts/build_graph.py
+    "$PYTHON_BIN" scripts/build_graph.py
 
 # ──────────────────────────────────────────────
 # Step 2: Prepare features
 # ──────────────────────────────────────────────
 run_step 2 "Prepare features" \
-    python scripts/prepare_features.py
+    "$PYTHON_BIN" scripts/prepare_features.py
 
 # ──────────────────────────────────────────────
 # --baselines: fast path (no training needed)
@@ -76,11 +85,11 @@ if [ "$BASELINES_ONLY" = true ]; then
 
     for cfg in "${BASELINE_CONFIGS[@]}"; do
         echo "  Backtesting: $cfg"
-        python -m deepm.backtest --name "$cfg" --diagnostics
+        "$PYTHON_BIN" -m deepm.backtest --name "$cfg" --diagnostics
     done
 
     echo ""
-    python scripts/aggregate_metrics.py \
+    "$PYTHON_BIN" scripts/aggregate_metrics.py \
         --title "Traditional Baselines" \
         --csv backtest_results/baselines_metrics.csv \
         "${BASELINE_CONFIGS[@]}"
@@ -97,7 +106,7 @@ train_model() {
     local config=$1
     local arch=$2
     echo "  Training: $config / $arch"
-    python -m deepm.training -r "$config" -a "$arch"
+    "$PYTHON_BIN" -m deepm.training -r "$config" -a "$arch"
 }
 
 step3() {
@@ -141,7 +150,7 @@ run_step 3 "Train models" step3
 backtest() {
     local config=$1
     echo "  Backtesting: $config"
-    python -m deepm.backtest --name "$config" --diagnostics
+    "$PYTHON_BIN" -m deepm.backtest --name "$config" --diagnostics
 }
 
 step4() {
@@ -222,8 +231,8 @@ run_step 4 "Run backtests" step4
 # ──────────────────────────────────────────────
 step5() {
     echo ""
-    python scripts/aggregate_metrics.py \
-        --title "Table 1: Main Results (2010–2025)" \
+    "$PYTHON_BIN" scripts/aggregate_metrics.py \
+        --title "Table 1: Main Results (2010–2026)" \
         bt-baseline-longonly \
         bt-baseline-tsmom \
         bt-baseline-tsmom-rm \
@@ -238,8 +247,8 @@ step5() {
         bt-deepm-gat
 
     echo ""
-    python scripts/aggregate_metrics.py \
-        --title "Table 2: Ablation Studies (2010–2025)" \
+    "$PYTHON_BIN" scripts/aggregate_metrics.py \
+        --title "Table 2: Ablation Studies (2010–2026)" \
         bt-deepm-gat \
         bt-deepm-gcn \
         bt-deepm-no-graph \
@@ -256,7 +265,7 @@ step5() {
         bt-deepm-gat-full-cost
 
     echo ""
-    python scripts/aggregate_metrics.py \
+    "$PYTHON_BIN" scripts/aggregate_metrics.py \
         --title "Table 3: Seed Sensitivity" \
         bt-deepm-gat-1seed \
         bt-deepm-gat-10seed \
@@ -265,7 +274,7 @@ step5() {
         bt-deepm-gat-100seed
 
     echo ""
-    python scripts/aggregate_metrics.py \
+    "$PYTHON_BIN" scripts/aggregate_metrics.py \
         --title "Table 4: Post-2020 Results" \
         bt-post2020-baseline-longonly \
         bt-post2020-baseline-tsmom \
@@ -280,7 +289,7 @@ step5() {
         bt-post2020-deepm-gat
 
     # Save full CSV (suppress table reprint)
-    python scripts/aggregate_metrics.py --auto \
+    "$PYTHON_BIN" scripts/aggregate_metrics.py --auto \
         --csv backtest_results/all_metrics.csv > /dev/null
 }
 run_step 5 "Aggregate metrics tables" step5

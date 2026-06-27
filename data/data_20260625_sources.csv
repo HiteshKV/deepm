@@ -1,0 +1,51 @@
+ticker,asset,yahoo_symbol,source_kind,first_date,last_date,rows,coverage_pct,note
+EN,Nasdaq 100,NQ=F,futures,2000-09-18,2026-06-25,6506,68.35,
+ER,Russell 2000,^RUT,index,1990-01-02,2026-06-24,9186,96.51,Proxy for RTY futures; longer public history.
+ES,S&P 500,ES=F,futures,2000-09-18,2026-06-25,6506,68.35,
+YM,Dow Jones,YM=F,futures,2002-04-05,2026-06-25,6097,64.06,
+LX,FTSE 100,^FTSE,index,1990-01-02,2026-06-25,9214,96.81,Proxy for FTSE futures.
+CA,CAC 40,^FCHI,index,1990-03-01,2026-06-25,9223,96.9,Proxy for CAC futures.
+XU,EuroStoxx 50,^STOXX50E,index,2007-03-30,2026-06-25,4820,50.64,Proxy for EuroStoxx futures.
+NK,Nikkei 225,^N225,index,1990-01-04,2026-06-25,8951,94.04,Proxy for Nikkei futures.
+HS,Hang Seng,^HSI,index,1990-01-02,2026-06-25,9001,94.57,Proxy for Hang Seng futures.
+FB,US 5-Year Note,ZF=F,futures,2000-09-21,2026-06-25,6480,68.08,
+TU,US 2-Year Note,ZT=F,futures,2000-06-02,2026-06-25,6534,68.65,
+TY,US 10-Year Note,ZN=F,futures,2000-09-21,2026-06-25,6468,67.96,
+US,US 30-Year Bond,ZB=F,futures,2000-09-21,2026-06-25,6474,68.02,
+DT,German Bund 10yr,EXHD.DE,etf,2008-01-02,2026-06-25,4691,49.29,German government 5.5-10.5y ETF proxy.
+UB,German Bobl 5yr,EXHC.DE,etf,2008-01-02,2026-06-25,4691,49.29,German government 2.5-5.5y ETF proxy.
+UZ,German Schatz 2yr,EXHB.DE,etf,2008-01-02,2026-06-25,4691,49.29,German government 1.5-2.5y ETF proxy.
+GS,UK Gilt,IGLT.L,etf,2008-01-02,2026-06-25,4668,49.04,UK gilt ETF proxy.
+CB,Canada 10-Year,XGB.TO,etf,2006-11-10,2026-06-24,4924,51.73,Canadian government bond ETF proxy.
+BC,Brent Crude,BZ=F,futures,2007-07-30,2026-06-25,4705,49.43,
+BG,Gasoil,HO=F,futures,2000-09-01,2026-06-25,6481,68.09,NY Harbor ULSD/heating oil proxy for gasoil.
+ZB,RBOB Gasoline,RB=F,futures,2000-11-01,2026-06-25,6442,67.68,
+ZN,Natural Gas,NG=F,futures,2000-08-30,2026-06-25,6484,68.12,
+ZU,WTI Crude,CL=F,futures,2000-08-23,2026-06-25,6486,68.14,
+ZA,Palladium,PA=F,futures,1998-09-28,2026-06-25,6517,68.47,
+ZG,Gold,GC=F,futures,2000-08-30,2026-06-25,6478,68.06,
+ZI,Silver,SI=F,futures,2000-08-30,2026-06-25,6480,68.08,
+ZP,Platinum,PL=F,futures,1997-10-29,2026-06-25,6506,68.35,
+ZK,Copper,HG=F,futures,2000-08-30,2026-06-25,6483,68.11,
+KW,KC Wheat,KE=F,futures,2000-09-21,2026-06-25,6479,68.07,
+ZC,Corn,ZC=F,futures,2000-07-17,2026-06-25,6490,68.19,
+ZL,Soybean Oil,ZL=F,futures,2000-03-15,2026-06-25,6531,68.62,
+ZM,Soybean Meal,ZM=F,futures,2000-05-15,2026-06-25,6493,68.22,
+ZS,Soybeans,ZS=F,futures,2000-09-15,2026-06-25,6482,68.1,
+ZW,Chicago Wheat,ZW=F,futures,2000-07-17,2026-06-25,6502,68.31,
+CC,Cocoa,CC=F,futures,2000-01-03,2026-06-25,6640,69.76,
+CT,Cotton,CT=F,futures,2000-01-03,2026-06-25,6640,69.76,
+JO,Orange Juice,OJ=F,futures,2001-09-17,2026-06-24,6215,65.3,
+KC,Coffee,KC=F,futures,2000-01-03,2026-06-25,6638,69.74,
+SB,Sugar,SB=F,futures,2000-03-01,2026-06-25,6601,69.35,
+ZF,Feeder Cattle,GF=F,futures,2001-04-03,2026-06-24,6314,66.34,
+ZT,Live Cattle,LE=F,futures,2001-03-01,2026-06-24,6344,66.65,
+ZZ,Lean Hogs,HE=F,futures,2000-12-15,2026-06-24,6412,67.37,
+AN,AUD/USD,6A=F,futures,2000-11-08,2026-06-25,6411,67.36,
+BN,GBP/USD,6B=F,futures,2000-10-05,2026-06-25,6422,67.47,
+CN,CAD/USD,6C=F,futures,2000-05-23,2026-06-25,6528,68.59,
+FN,EUR/USD,6E=F,futures,2000-09-12,2026-06-25,6508,68.38,
+JN,JPY/USD,6J=F,futures,2000-09-13,2026-06-25,6431,67.57,
+SN,CHF/USD,6S=F,futures,2000-11-10,2026-06-25,6416,67.41,
+MP,MXN/USD,6M=F,futures,2001-06-18,2026-06-25,6268,65.85,
+DX,US Dollar Index,DX-Y.NYB,index,1990-01-02,2026-06-25,9295,97.66,
