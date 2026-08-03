@@ -1,0 +1,13 @@
+.venv/
+*.egg-info/
+__pycache__/
+*.py[cod]
+.env
+.env.*
+raw_data/
+data/*.csv
+data/deregime/*.csv
+data/deregime/*.json
+runs/
+deregime_runs/
+.DS_Store

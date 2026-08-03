@@ -1,0 +1,42 @@
+inherits: deepm-gat
+
+data_parquet: "data_20260625_deregime.parquet"
+
+deregime_sidecar:
+  enabled: true
+  variant: mean
+  feature_cache: "feats-data_20260625_deregime.parquet"
+  audit: "deregime/deregime_sidecar_audit_20260625.json"
+
+features:
+  - r1d
+  - r1m
+  - r3m
+  - r1y
+  - z_price_21d
+  - z_price_252d
+  - dg_available
+  - dg_mu_h1
+  - dg_p_pos_h1
+  - dg_pi0_h1
+  - dg_pi1_h1
+  - dg_pi2_h1
+  - dg_pi3_h1
+  - dg_mu_h5
+  - dg_p_pos_h5
+  - dg_pi0_h5
+  - dg_pi1_h5
+  - dg_pi2_h5
+  - dg_pi3_h5
+  - dg_mu_h21
+  - dg_p_pos_h21
+  - dg_pi0_h21
+  - dg_pi1_h21
+  - dg_pi2_h21
+  - dg_pi3_h21
+  - dg_mu_h63
+  - dg_p_pos_h63
+  - dg_pi0_h63
+  - dg_pi1_h63
+  - dg_pi2_h63
+  - dg_pi3_h63

@@ -181,14 +181,39 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
-wandb/*
-macro_adjacency_*.csv
+wandb/
+projects/*/.venv/
+projects/*/*.egg-info/
 
-models_torch/*
-backtest_results/*
-backtest_diagnostics/*
-live_runs/*
-live_state/*
+projects/deepm_macro/wandb/
+projects/deepm_macro/macro_adjacency_*.csv
+projects/deepm_macro/models_torch/
+projects/deepm_macro/backtest_results/
+projects/deepm_macro/backtest_diagnostics/
+projects/deepm_macro/live_runs/
+projects/deepm_macro/live_state/
+projects/deepm_macro/data/*.parquet
+projects/deepm_macro/data/deregime/*.csv
+projects/deepm_macro/data/deregime/*.json
+projects/deepm_macro/data/deregime/*.parquet
+
+projects/deregime/raw_data/
+projects/deregime/data/*.csv
+projects/deregime/data/deregime/*.csv
+projects/deregime/data/deregime/*.json
+projects/deregime/runs/
+projects/deregime/deregime_runs/
+
+projects/stock_top10_strategy/stock_top10_strategy/runs/
+projects/stock_top10_strategy/stock_top10_strategy/data/*.csv
+projects/stock_top10_strategy/stock_top10_strategy/data/*.json
+
+projects/equity_intraday_deepm/equity_intraday_deepm/data/*.parquet
+projects/equity_intraday_deepm/equity_intraday_deepm/data/*.json
+projects/equity_intraday_deepm/equity_intraday_deepm/models/
+projects/equity_intraday_deepm/equity_intraday_deepm/backtests/
+projects/equity_intraday_deepm/equity_intraday_deepm/reports/
+projects/equity_intraday_deepm/equity_intraday_deepm/vendor_data/
 uv.lock
 # Abstra
 # Abstra is an AI-powered process automation framework.
@@ -208,9 +233,6 @@ uv.lock
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
-
-# Data files
-data/*.parquet
 
 # macOS
 .DS_Store

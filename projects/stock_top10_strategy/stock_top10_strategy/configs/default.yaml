@@ -1,0 +1,33 @@
+run_name: top10_buy_the_move_sample
+
+data:
+  path: stock_top10_strategy/examples/sample_point_in_time.csv
+  source_label: synthetic point-in-time sample
+  source_kind: point_in_time
+  start_date: null
+  end_date: null
+
+strategy:
+  initial_cash: 1000000.0
+  buy_notional: 25000.0
+  trigger_return: 0.03
+  trigger_lookback_days: 5
+  top_n: 10
+  rebalance_frequency: daily
+  exit_ween_days: 10
+
+execution:
+  commission_bps: 1.0
+  min_commission: 1.0
+  half_spread_bps: 2.0
+  slippage_bps: 3.0
+
+risk:
+  max_position_pct_nav: 0.20
+  max_single_day_turnover_pct_nav: 0.25
+  allow_margin: false
+  allow_fractional_shares: false
+  risk_free_rate: 0.0
+
+reporting:
+  output_dir: stock_top10_strategy/runs

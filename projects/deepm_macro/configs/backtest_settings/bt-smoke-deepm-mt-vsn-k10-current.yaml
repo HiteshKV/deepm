@@ -1,0 +1,5 @@
+inherits: bt-deepm-mt-vsn-k10-current
+
+model:
+  train_yaml: smoke-deepm-mt-vsn
+  top_n_seeds: 1

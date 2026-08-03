@@ -1,0 +1,11 @@
+inherits: deepm-independent
+
+# Portfolio-level Momentum Transformer lane.
+# This keeps DeePM's rolling windows, portfolio objective, transaction costs,
+# and seed selection, but replaces the graph/cross-asset stack with a
+# Momentum-Transformer-style temporal encoder.
+sweep_yaml: sweep-mt-deepm
+device: mps
+top_n_seeds: 10
+record_temporal_attention: false
+use_static_ticker: true

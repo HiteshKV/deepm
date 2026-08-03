@@ -1,0 +1,10 @@
+.venv/
+*.egg-info/
+__pycache__/
+*.py[cod]
+.env
+.env.*
+stock_top10_strategy/runs/
+stock_top10_strategy/data/*.csv
+stock_top10_strategy/data/*.json
+.DS_Store

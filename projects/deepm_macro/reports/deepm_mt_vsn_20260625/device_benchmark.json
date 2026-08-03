@@ -1,0 +1,37 @@
+{
+  "run": "deepm-mt-vsn",
+  "architecture": "MT_DEEPM",
+  "test_window": "2020-2027",
+  "hyperparameters": {
+    "lr": 0.0001,
+    "batch_size": 32,
+    "weight_decay": 1e-05,
+    "max_gradient_norm": 0.5,
+    "dropout": 0.1,
+    "hidden_dim": 64,
+    "num_heads": 4
+  },
+  "results": [
+    {
+      "requested_device": "cpu",
+      "resolved_device": "cpu",
+      "status": "ok",
+      "batches": 2,
+      "mean_seconds_per_batch": 4.889067374984734,
+      "median_seconds_per_batch": 4.889067374984734,
+      "min_seconds_per_batch": 4.744823125074618,
+      "max_seconds_per_batch": 5.03331162489485
+    },
+    {
+      "requested_device": "mps",
+      "resolved_device": "mps",
+      "status": "ok",
+      "batches": 2,
+      "mean_seconds_per_batch": 0.7407766460091807,
+      "median_seconds_per_batch": 0.7407766460091807,
+      "min_seconds_per_batch": 0.6864458339987323,
+      "max_seconds_per_batch": 0.7951074580196291
+    }
+  ],
+  "recommended_device": "mps"
+}

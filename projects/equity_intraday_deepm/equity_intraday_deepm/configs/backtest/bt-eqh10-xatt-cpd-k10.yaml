@@ -1,0 +1,8 @@
+name: bt-eqh10-xatt-cpd-k10
+train_config: eqh10-xatt-cpd
+architecture: EQH_DEEPM_XATT
+features_path: equity_intraday_deepm/data/features_hourly_top10.parquet
+output_dir: equity_intraday_deepm/backtests
+top_n_seeds: 10
+active_top_n: 10
+device: auto

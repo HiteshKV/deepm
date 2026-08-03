@@ -1,0 +1,76 @@
+name: deepm-gat-ibkr
+
+mode_defaults:
+  mode: sim
+  live_enabled: false
+  require_confirmation_file: true
+  confirmation_dir: live_confirmations
+
+model:
+  train_yaml: deepm-gat
+  architecture: DeePM
+  top_n_seeds: 25
+  seq_len: 84
+  pre_loss_steps: 63
+  batch_size: 8
+
+schedule:
+  run_after_utc: "22:15"
+  weekdays_only: true
+  max_data_staleness_days: 3
+  poll_seconds: 300
+
+data:
+  sim_provider: yahoo_eod
+  paper_provider: yahoo_eod
+  live_provider: ibkr_market_data
+  raw_price_parquet: data/data_20260625.parquet
+  history_start_date: "1990-01-02"
+  live_snapshot_dir: live_state/snapshots
+  latest_snapshot_name: latest_prices.parquet
+  persist_live_snapshot: true
+
+email:
+  enabled: true
+  send_legacy: true
+  send_detailed: false
+  to:
+    - hkvelakaturi@gmail.com
+  subject_prefix: "[DeePM Live]"
+
+risk:
+  simulator_cash: 100000.0
+  paper_simulator_cash: 1000000.0
+  target_annual_vol: 0.10
+  max_gross_leverage: 1.0
+  max_daily_turnover: 0.20
+  max_order_notional: 0.10
+  paper_simulator_max_daily_turnover: 0.50
+  require_reviewed_mappings_for_paper: true
+  allow_fractional_futures: false
+  default_slippage_bps: 5.0
+  marketable_limit_bps: 5.0
+  marketable_limit_ticks: 2
+  order_timeout_seconds: 120
+
+ibkr:
+  host: "127.0.0.1"
+  paper_port: 7497
+  live_port: 7496
+  client_id: 77
+  account: null
+  paper_simulation: true
+  require_gateway_for_paper: false
+
+model_update:
+  policy: "daily_inference_quarterly_challenger"
+  min_new_business_days_for_retrain: 60
+  max_model_age_days: 180
+  auto_retrain_enabled: false
+  auto_promote_enabled: false
+
+paths:
+  instrument_map: configs/live/instruments_ibkr.csv
+  run_dir: live_runs
+  state_dir: live_state
+  ledger: live_state/trading_ledger.sqlite

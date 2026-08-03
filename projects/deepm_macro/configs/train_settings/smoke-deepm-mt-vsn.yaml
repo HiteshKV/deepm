@@ -1,0 +1,11 @@
+inherits: deepm-mt-vsn
+
+test_run: true
+iterations: 2
+random_search_max_iterations: 1
+top_n_seeds: 1
+early_stopping: 1
+val_burnin_steps: 0
+first_test_year: 2020
+test_start_years:
+  - 2020

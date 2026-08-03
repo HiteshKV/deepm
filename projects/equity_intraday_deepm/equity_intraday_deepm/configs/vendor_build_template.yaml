@@ -1,0 +1,65 @@
+# Copy this file and point it at normalized institutional exports.
+# This workflow computes daily USD market caps from daily prices, shares
+# outstanding, and FX before building the causal top-10 universe.
+
+start: "2000-01-01"
+end: "2026-07-10"
+active_top_n: 10
+strict_top_n: true
+
+inputs:
+  security_master: /absolute/path/to/security_master_export.parquet
+  daily_prices: /absolute/path/to/daily_prices_export.parquet
+  daily_shares: /absolute/path/to/daily_shares_outstanding_export.parquet
+  daily_fx: /absolute/path/to/daily_fx_to_usd_export.parquet
+  hourly_bars: /absolute/path/to/hourly_bars_export.parquet
+
+outputs:
+  security_master: equity_intraday_deepm/vendor_data/security_master.parquet
+  market_caps: equity_intraday_deepm/vendor_data/market_caps.parquet
+  hourly_bars: equity_intraday_deepm/vendor_data/hourly_bars.parquet
+
+# Map canonical column name -> vendor export column name.
+# Leave values as-is when your exports already use canonical column names.
+column_maps:
+  security_master:
+    company_id: company_id
+    security_id: security_id
+    primary_security_id: primary_security_id
+    ticker: ticker
+    company_name: company_name
+    country: country
+    sector: sector
+    currency: currency
+    exchange: exchange
+    ibkr_con_id: ibkr_con_id
+    is_common_equity: is_common_equity
+    is_ibkr_tradable: is_ibkr_tradable
+    is_primary_listing: is_primary_listing
+    listing_start: listing_start
+    listing_end: listing_end
+  daily_prices:
+    date: date
+    security_id: security_id
+    close: close
+    currency: currency
+    fx_to_usd: fx_to_usd
+  daily_shares:
+    date: date
+    security_id: security_id
+    shares_outstanding: shares_outstanding
+  daily_fx:
+    date: date
+    currency: currency
+    fx_to_usd: fx_to_usd
+  hourly_bars:
+    timestamp: timestamp
+    security_id: security_id
+    open: open
+    high: high
+    low: low
+    close: close
+    adj_close: adj_close
+    volume: volume
+    currency: currency
+    fx_to_usd: fx_to_usd

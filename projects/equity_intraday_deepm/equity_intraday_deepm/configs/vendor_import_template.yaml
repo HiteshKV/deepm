@@ -1,0 +1,56 @@
+# Copy this file and point it at exported vendor files.
+# The canonical target files created are:
+#   equity_intraday_deepm/vendor_data/security_master.parquet
+#   equity_intraday_deepm/vendor_data/market_caps.parquet
+#   equity_intraday_deepm/vendor_data/hourly_bars.parquet
+#
+# For fully correct 2000-current global top-10 research, use institutional
+# point-in-time data such as LSEG Tick History or FactSet Tick History for
+# intraday bars, plus FactSet/LSEG/Bloomberg/Compustat-style point-in-time
+# security master, shares, FX, and corporate actions.
+
+start: "2000-01-01"
+end: "2026-07-10"
+active_top_n: 10
+strict_top_n: true
+
+inputs:
+  security_master: /absolute/path/to/security_master_export.parquet
+  market_caps: /absolute/path/to/daily_market_caps_export.parquet
+  hourly_bars: /absolute/path/to/hourly_bars_export.parquet
+
+outputs:
+  security_master: equity_intraday_deepm/vendor_data/security_master.parquet
+  market_caps: equity_intraday_deepm/vendor_data/market_caps.parquet
+  hourly_bars: equity_intraday_deepm/vendor_data/hourly_bars.parquet
+
+# Map canonical column name -> vendor export column name.
+# If your files already use canonical names, leave these empty.
+column_maps:
+  security_master:
+    security_id: security_id
+    ticker: ticker
+    company_name: company_name
+    country: country
+    sector: sector
+    currency: currency
+    exchange: exchange
+    ibkr_con_id: ibkr_con_id
+    is_common_equity: is_common_equity
+    is_ibkr_tradable: is_ibkr_tradable
+    listing_start: listing_start
+    listing_end: listing_end
+  market_caps:
+    date: date
+    security_id: security_id
+    market_cap_usd: market_cap_usd
+  hourly_bars:
+    timestamp: timestamp
+    security_id: security_id
+    open: open
+    high: high
+    low: low
+    close: close
+    adj_close: adj_close
+    volume: volume
+    fx_to_usd: fx_to_usd

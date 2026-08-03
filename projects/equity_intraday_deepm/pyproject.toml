@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "equity-intraday-deepm"
+version = "0.1.0"
+description = "Hourly top-10 global equity DeePM-style pilot"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "torch>=2.0",
+    "pandas>=2.0",
+    "numpy>=1.24",
+    "pyyaml>=6.0",
+    "pyarrow>=14.0",
+    "matplotlib>=3.7",
+    "scikit-learn>=1.3",
+    "wandb>=0.15",
+]
+
+[project.scripts]
+equity-intraday-deepm = "equity_intraday_deepm.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["equity_intraday_deepm*"]
+namespaces = false
+
+[tool.setuptools.package-data]
+equity_intraday_deepm = ["configs/*.yaml", "configs/train/*.yaml", "configs/backtest/*.yaml"]

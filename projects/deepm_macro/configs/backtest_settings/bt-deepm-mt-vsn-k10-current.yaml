@@ -1,0 +1,9 @@
+inherits: bt-deepm-gat-k10-current
+
+model:
+  train_yaml: deepm-mt-vsn
+  architecture: MT_DEEPM
+  top_n_seeds: 10
+  seq_len: 84
+  pre_loss_steps: 63
+  batch_size: 8

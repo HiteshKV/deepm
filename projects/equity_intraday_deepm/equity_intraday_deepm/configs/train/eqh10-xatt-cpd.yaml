@@ -1,0 +1,21 @@
+inherits: eqh10-xatt
+run_name: eqh10-xatt-cpd
+use_cross_attention: true
+features:
+  - r1h
+  - r3h
+  - r6h
+  - r1d
+  - r3d
+  - r1w
+  - z_price_1d
+  - z_price_1w
+  - realized_vol_1d
+  - realized_vol_1w
+  - intraday_range
+  - z_volume_1w
+  - rank_scaled
+  - rank_change
+  - market_cap_log
+  - cpd_short
+  - cpd_medium

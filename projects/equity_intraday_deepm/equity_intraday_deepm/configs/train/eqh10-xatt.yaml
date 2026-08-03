@@ -1,0 +1,3 @@
+inherits: eqh10-mt-vsn
+run_name: eqh10-xatt
+use_cross_attention: true

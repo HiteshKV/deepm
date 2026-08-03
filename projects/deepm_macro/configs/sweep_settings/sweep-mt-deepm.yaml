@@ -1,0 +1,14 @@
+method: "random"
+metric:
+    goal: "maximize"
+    name: "valid_loss_best"
+
+parameters:
+    lr: { "values": [0.0001, 0.0003] }
+    batch_size: { "values": [32, 64] }
+    weight_decay: { "values": [0.00001, 0.0001, 0.001] }
+    max_gradient_norm: { "values": [0.5, 1.0] }
+
+    dropout: { "values": [0.1, 0.2, 0.3] }
+    hidden_dim: { "values": [64, 128] }
+    num_heads: { "values": [4] }

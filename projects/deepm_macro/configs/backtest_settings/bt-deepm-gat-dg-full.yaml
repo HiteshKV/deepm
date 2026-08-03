@@ -1,0 +1,6 @@
+inherits: bt-deepm-gat
+
+data_parquet: "data_20260625_deregime.parquet"
+
+model:
+  train_yaml: "deepm-gat-dg-full"

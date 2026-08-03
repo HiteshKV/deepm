@@ -1,0 +1,59 @@
+company_name,security_id,yahoo_symbol,country,currency,notes
+AT&T,ATT,T,US,USD,
+Alibaba Group,ALIBABA,BABA,China,USD,US ADR starts 2014
+Alphabet,ALPHABET,GOOGL,US,USD,
+Amazon,AMAZON,AMZN,US,USD,
+American International Group,AIG,AIG,US,USD,
+Apple,APPLE,AAPL,US,USD,
+BHP Billiton,BHP,BHP,Australia,USD,US ADR proxy
+BP,BP,BP,UK,USD,US ADR proxy
+Bank of America,BAC,BAC,US,USD,
+Berkshire Hathaway,BRK,BRK-B,US,USD,
+Broadcom,BROADCOM,AVGO,US,USD,
+Chevron Corporation,CHEVRON,CVX,US,USD,
+China Construction Bank,CCB,0939.HK,China,HKD,Hong Kong listing
+China Mobile,CHINA_MOBILE,0941.HK,China,HKD,Hong Kong listing
+Cisco Systems,CISCO,CSCO,US,USD,
+Citigroup,CITIGROUP,C,US,USD,
+Deutsche Telekom,DEUTSCHE_TELEKOM,DTE.DE,Germany,EUR,
+Eli Lilly,LILLY,LLY,US,USD,
+ExxonMobil,EXXON,XOM,US,USD,
+Facebook,META,META,US,USD,
+Gazprom,GAZPROM,GAZP.ME,Russia,RUB,Yahoo history unavailable for some years
+General Electric,GE,GE,US,USD,
+Google,ALPHABET,GOOGL,US,USD,
+HSBC,HSBC,HSBC,UK,USD,US ADR proxy
+Hoffmann-La Roche,ROCHE,RO.SW,Switzerland,CHF,Swiss listing
+IBM,IBM,IBM,US,USD,
+ICBC,ICBC,1398.HK,China,HKD,Hong Kong listing
+Intel,INTEL,INTC,US,USD,
+Intel Corporation,INTEL,INTC,US,USD,
+JPMorgan Chase,JPM,JPM,US,USD,
+Johnson & Johnson,JNJ,JNJ,US,USD,
+Lucent,LUCENT,,US,USD,No reliable free Yahoo historical symbol
+Meta,META,META,US,USD,
+Microsoft,MICROSOFT,MSFT,US,USD,
+NTT Docomo,NTT_DOCOMO,,Japan,JPY,No reliable free Yahoo historical symbol
+Nestlé,NESTLE,NESN.SW,Switzerland,CHF,Swiss listing
+Nippon Telegraph & Telephone,NTT,9432.T,Japan,JPY,Tokyo listing
+Novartis,NOVARTIS,NOVN.SW,Switzerland,CHF,Swiss listing
+Nvidia,NVIDIA,NVDA,US,USD,
+Petro China,PETROCHINA,0857.HK,China,HKD,Hong Kong listing
+PetroChina,PETROCHINA,0857.HK,China,HKD,Hong Kong listing
+Petrobras,PETROBRAS,PBR,Brazil,USD,US ADR proxy
+Petrochina,PETROCHINA,0857.HK,China,HKD,Hong Kong listing
+Pfizer,PFIZER,PFE,US,USD,
+Procter & Gamble,PG,PG,US,USD,
+Royal Dutch Shell,SHELL,SHEL,UK,USD,Current Shell ticker proxy for old RDS listings
+Samsung Electronics,SAMSUNG,005930.KS,South Korea,KRW,Korea listing
+Sinopec,SINOPEC,0386.HK,China,HKD,Hong Kong listing
+TSMC,TSMC,TSM,Taiwan,USD,US ADR proxy
+Tencent,TENCENT,0700.HK,China,HKD,Hong Kong listing
+Tesla,TESLA,TSLA,US,USD,
+Toyota,TOYOTA,TM,Japan,USD,US ADR proxy
+UnitedHealth,UNH,UNH,US,USD,
+Visa,VISA,V,US,USD,
+Vodafone,VODAFONE,VOD,UK,USD,US ADR proxy
+Wal-Mart,WALMART,WMT,US,USD,
+Walmart,WALMART,WMT,US,USD,
+Wells Fargo,WFC,WFC,US,USD,

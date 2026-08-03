@@ -1,0 +1,13 @@
+.venv/
+*.egg-info/
+__pycache__/
+*.py[cod]
+.env
+.env.*
+equity_intraday_deepm/data/*.parquet
+equity_intraday_deepm/data/*.json
+equity_intraday_deepm/models/
+equity_intraday_deepm/backtests/
+equity_intraday_deepm/reports/
+equity_intraday_deepm/vendor_data/
+.DS_Store
